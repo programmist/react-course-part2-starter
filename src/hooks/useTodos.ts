@@ -13,6 +13,7 @@ const useTodos = () => {
   return useQuery<Todo[], Error>({
     queryKey: ["todos"],
     queryFn: () => axios.get<Todo[]>(endpoint).then((res) => res.data),
+    staleTime: 10 * 1000,
   });
 };
 
