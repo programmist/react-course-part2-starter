@@ -8,11 +8,14 @@ export interface Post {
   userId: number;
 }
 
-const usePosts = () => {
+const usePosts = (userId: number | undefined) => {
   const endpoint = "https://jsonplaceholder.typicode.com/posts";
   return useQuery<Post[], Error>({
-    queryKey: ["posts"],
-    queryFn: () => axios.get<Post[]>(endpoint).then((res) => res.data),
+    queryKey: userId ? ["users", userId, "posts"] : ["posts"],
+    queryFn: () =>
+      axios
+        .get<Post[]>(endpoint, { params: { userId } })
+        .then((res) => res.data),
     staleTime: 60 * 1000, // 1 min
   });
 };
