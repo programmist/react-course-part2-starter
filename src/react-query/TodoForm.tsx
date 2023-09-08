@@ -8,7 +8,7 @@ interface Props {
 
 const TodoForm = ({ onAddTodo }: Props) => {
   const queryClient = useQueryClient();
-  const addTodo = useMutation<Todo, Error, Todo>({
+  const { error, mutate, isLoading } = useMutation<Todo, Error, Todo>({
     mutationFn: (todo: Todo) =>
       axios
         .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
@@ -26,21 +26,20 @@ const TodoForm = ({ onAddTodo }: Props) => {
         savedTodo,
         ...(todos || []),
       ]);
+      if (ref.current) ref.current.value = "";
     },
   });
   const ref = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      {addTodo.error && (
-        <div className="alert alert-danger">{addTodo.error.message}</div>
-      )}
+      {error && <div className="alert alert-danger">{error.message}</div>}
       <form
         className="row mb-3"
         onSubmit={(event) => {
           event.preventDefault();
           if (ref?.current?.value) {
-            addTodo.mutate({
+            mutate({
               id: 0,
               title: ref?.current?.value,
               completed: false,
@@ -53,7 +52,9 @@ const TodoForm = ({ onAddTodo }: Props) => {
           <input ref={ref} type="text" className="form-control" />
         </div>
         <div className="col">
-          <button className="btn btn-primary">Add</button>
+          <button disabled={isLoading} className="btn btn-primary">
+            {isLoading ? "Adding..." : "Add"}
+          </button>
         </div>
       </form>
     </>
