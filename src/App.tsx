@@ -6,7 +6,7 @@ import TodoList from "./react-query/TodoList";
 function App() {
   return (
     <>
-      <TodoForm onAddTodo={() => {}} />
+      <TodoForm />
       <TodoList />;
     </>
   );

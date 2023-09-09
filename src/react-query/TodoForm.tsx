@@ -2,31 +2,47 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { Todo } from "../hooks/useTodos";
 import axios from "axios";
-interface Props {
-  onAddTodo: (todo: string | undefined) => void;
+
+interface AddTodoContext {
+  previousTodos: Todo[];
 }
 
-const TodoForm = ({ onAddTodo }: Props) => {
+const TodoForm = () => {
   const queryClient = useQueryClient();
-  const { error, mutate, isLoading } = useMutation<Todo, Error, Todo>({
+  const { error, mutate, isLoading } = useMutation<
+    Todo,
+    Error,
+    Todo,
+    AddTodoContext
+  >({
     mutationFn: (todo: Todo) =>
       axios
         .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
         .then((res) => res.data),
-    onSuccess: (savedTodo, newTodo) => {
-      // APPROACH 1: Invalidate cache so newly added data is fetched
-      // and displayed. Note: This won't work on JSONPlaceholder fake API
-      // queryClient.invalidateQueries({
-      //   queryKey: ["todos"],
-      // });
 
-      // APPROACH 2: Updating the data in the cache directly
-      // Add the new Todo directly to the top of the cached list of Todos
+    onMutate: (newTodo: Todo) => {
+      const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]) ?? [];
+
       queryClient.setQueryData<Todo[]>(["todos"], (todos) => [
-        savedTodo,
+        newTodo,
         ...(todos || []),
       ]);
       if (ref.current) ref.current.value = "";
+
+      return { previousTodos };
+    },
+
+    onSuccess: (savedTodo, newTodo) => {
+      queryClient.setQueryData<Todo[]>(["todos"], (todos) =>
+        todos?.map((todo) => (todo.id === newTodo.id ? savedTodo : todo))
+      );
+    },
+
+    onError: (error, variables, context) => {
+      if (!context) return;
+
+      // on error, set todos back to original values
+      queryClient.setQueryData<Todo[]>(["todos"], context.previousTodos);
     },
   });
   const ref = useRef<HTMLInputElement>(null);
