@@ -1,5 +1,5 @@
 import { Dispatch, createContext } from "react";
-import { AuthAction } from "../reducers/authReducer";
+import { AuthAction } from "./authReducer";
 
 interface AuthContextType {
   user: string;
