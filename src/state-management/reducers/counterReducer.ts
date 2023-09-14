@@ -10,9 +10,13 @@ const counterReducer = (state: number, action: Action): number => {
       return state + 1;
     case "RESET":
       return 0;
-    default:
-      return state;
   }
+  /*
+   * Note: When using TS union for `type` (instead of string) a
+   * default case isn't necessary since tsc will ensure that any
+   * action object passed to the dispatch fn for this reducer
+   * will have one of the expected values.
+   */
 };
 
 export default counterReducer;
