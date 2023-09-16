@@ -6,3 +6,8 @@ li.user-link.selected::after {
   transform:rotateY(180deg);
   content: " ❮";
 }
+
+/* .my-app .nav-link.active {
+  background-color: #ccc;
+  color: white;
+} */

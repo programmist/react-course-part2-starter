@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const NavBar = () => {
+  const location = useLocation();
+  console.log(location);
   return (
     <nav
-      className="navbar navbar-expand-lg"
+      className="my-app navbar navbar-expand-lg"
       style={{ background: "#f0f0f0", marginBottom: "1rem" }}
     >
       <div className="container-fluid">
@@ -13,14 +15,23 @@ const NavBar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link active" to="/">
+              <NavLink className="nav-link" to="/">
                 Home
-              </Link>
+              </NavLink>
+              {/* How to change active className in NavLink */}
+              {/* <NavLink
+                className={({ isActive }) =>
+                  isActive ? "nav-link active-class" : "nav-link"
+                }
+                to="/"
+              >
+                Home
+              </NavLink> */}
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" to="/users">
+              <NavLink className="nav-link" to="/users">
                 Users
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </div>
