@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import useUsers, { User } from "./hooks/useUsers";
 import { useEffect, useState } from "react";
 
-const UserListPage = () => {
+const UserList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const { getAll } = useUsers();
 
@@ -21,4 +21,4 @@ const UserListPage = () => {
   );
 };
 
-export default UserListPage;
+export default UserList;
