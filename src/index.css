@@ -1,3 +1,8 @@
 body { 
   padding: 1rem; 
 }
+
+li.user-link.selected::after {
+  transform:rotateY(180deg);
+  content: " ❮";
+}
