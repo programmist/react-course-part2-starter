@@ -5,6 +5,7 @@ import UserDetail from "./UserDetail";
 import UsersPage from "./UsersPage";
 import ErrorPage from "./ErrorPage";
 import LoginPage from "./LoginPage";
+import PrivateRoutes from "./PrivateRoutes";
 
 const router = createBrowserRouter([
   {
@@ -15,9 +16,16 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/login", element: <LoginPage /> },
       {
-        path: "users",
-        element: <UsersPage />,
-        children: [{ path: ":id", element: <UserDetail /> }],
+        // Wrap a layout route around "users" route to protect it from not-logged-in users
+        element: <PrivateRoutes />,
+        // protected routes
+        children: [
+          {
+            path: "users",
+            element: <UsersPage />,
+            children: [{ path: ":id", element: <UserDetail /> }],
+          },
+        ],
       },
     ],
   },
